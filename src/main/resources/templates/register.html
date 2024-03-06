@@ -1,0 +1,192 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!DOCTYPE HTML>
+<!--
+    Signup Page by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+<title>Signup Page</title>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<style>
+/* 스타일 직접 적용 시작 */
+body {
+	background-color: #101010;
+	color: #aaa;
+	font-family: 'YourFontName', sans-serif;
+	font-weight: 400;
+	line-height: 1.65;
+	font-size: 1em;
+	overflow: hidden; /* 스크롤 없애기 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	line-height: 1.25;
+	margin: 0 0 0.5em 0;
+	color: #555;
+}
+
+p {
+	margin: 0 0 1.25em 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #00D3B7;
+}
+
+#main {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	background: #fff;
+	overflow-x: hidden;
+	overflow-y: auto;
+	text-align: center;
+	visibility: visible;
+	z-index: 10000;
+	left: 0;
+}
+
+#header {
+	padding: 3em 2.25em 1.75em 2.25em;
+}
+
+#header h1 {
+	font-size: 2.25em;
+	font-weight: 700;
+}
+
+#footer {
+	padding: 2.25em 2.25em 1em 2.25em;
+}
+
+#footer .copyright {
+	list-style: none;
+	padding: 0;
+}
+
+
+#signup-form {
+	max-width: 300px; /* 폼의 최대 가로폭 설정 */
+	margin: 0 auto; /* 가운데 정렬 */
+}
+
+#signup-form label, #signup-form input, #signup-form select {
+	margin: 5px; width : 100%; /* 인풋박스 100% 폭 설정 */
+	height: 40px;
+	box-sizing: border-box;
+	width: 100%; /* 너비에 padding과 border를 포함하도록 설정 */
+}
+
+#signup-form input, #signup-form select {
+	border-radius: 10px;
+	border: solid 1px;
+}
+
+#signup-form button {
+	margin-top: 10px; border-radius : 5px; /* 모서리를 둥글게 만듭니다 */
+	background-color: #dddddd; /* 약간 회색을 띄게 설정합니다 */
+	border: none; /* 테두리를 제거합니다 */
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+}
+#signup-form br {
+    margin-top: 10px;
+}
+#signup-form div {
+    margin-bottom: 20px; /* 원하는 만큼의 간격을 지정합니다 */
+}
+
+@font-face {
+	font-family: 'YourFontName';
+	src: url("/fonts/main.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+/* 스타일 직접 적용 종료 */
+</style>
+</head>
+
+<body class="is-preload-0 is-preload-1 is-preload-2">
+
+	<!-- Main -->
+	<div id="main">
+
+		<div th:replace="~{navi :: navi}"></div>
+		<!-- Header -->
+		<header id="header">
+			<div>
+				<br> <br>
+			</div>
+			<h1>Signup</h1>
+			<p>会員加入のために情報を入れてください。</p>
+		</header>
+
+		<!-- Signup Form -->
+		<section id="signup-form">
+			<form action="/register" method="post"
+				th:object="${userRegisterForm}">
+
+				<th:block th:if="${#fields.hasGlobalErrors()}">
+					<div class="alert alert-danger"
+						th:each="err : ${#fields.globalErrors()}" th:text="${err}"></div>
+				</th:block>
+
+				<label for="username">ID</label> <input type="text"
+					th:field="*{username}" required>
+				<div class="alert alert-danger" th:errors="*{username}"></div>
+				<br> <label for="password">Password</label> <input
+					type="password" th:field="*{password}" required>
+				<div class="alert alert-danger" th:errors="*{password}"></div>
+				<br> <label for="name">Name</label> <input type="text"
+					th:field="*{name}">
+				<div class="alert alert-danger" th:errors="*{name}"></div>
+				<br> <label for="phone">Phone Number</label> <input type="text"
+					th:field="*{phone}" required> <br> <label for="email">Email</label>
+				<input type="email" th:field="*{email}" required> <br>
+				<label for="birthdate">Birthdate</label> <input type="date"
+					th:field="*{birthDate}" required> <br> <br> <label
+					for="gender">Gender</label> <select th:field="*{gender}" required>
+					<option value="">選択</option>
+					<th:block
+						th:each="gender :  ${T(com.project.picasso.model.users.GenderType).values()}">
+						<option th:value="${gender}" th:text="${gender.getDescription()}"></option>
+					</th:block>
+				</select>
+				<div class="alert alert-danger" th:errors="*{gender}"></div>
+
+
+				<button type="submit">Signup</button>
+			</form>
+		</section>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<ul class="copyright">
+				<li>&copy; Untitled.</li>
+				<li>Designed by 元picassoSNS</a></li>
+			</ul>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+</html>

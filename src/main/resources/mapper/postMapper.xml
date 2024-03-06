@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.picasso.repository.PostMapper">
+	<insert id="savePost">
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			select
+			seq_user.nextval from dual
+		</selectKey>
+		insert into post (
+		id,
+		content,
+		user_id,
+		file_name,
+		views,
+		create_time,
+		hash,
+		hash2,
+		hash3
+		) values (
+		#{id},
+		#{content},
+		#{user.id},
+		#{fileName},
+		#{views},
+		#{createTime},
+		#{hash, jdbcType=VARCHAR},
+		#{Hash2, jdbcType=VARCHAR},
+		#{Hash3, jdbcType=VARCHAR}
+		)
+	</insert>
+
+	<resultMap type="post" id="postMap">
+		<id property="id" column="id" />
+		<result property="content" column="content" />
+		<result property="fileName" column="file_name" />
+		<result property="views" column="views" />
+		<result property="createTime" column="create_time" />
+		<result property="hash" column="hash" />
+		<result property="hash2" column="hash2" />
+		<result property="hash3" column="hash3" />
+		<association property="user" column="user_id"
+			javaType="user">
+			<id property="id" column="user_id" />
+			<result property="username" column="username" />
+			<result property="name" column="name" />
+		</association>
+	</resultMap>
+
+	<!-- 모든 게시글 조회 -->
+	<select id="findAllPosts" resultMap="postMap">
+		select *
+		from
+		post
+		order by
+		create_time desc
+	</select>
+
+	<!-- 전체 글 게시글 조회 -->
+	<select id="getTotal" resultType="int">
+		select count(*) from post
+	</select>
+
+	<!-- 아이디로 게시글 조회 -->
+	<select id="findPostById" resultMap="postMap">
+		select
+		p.id,
+		p.content,
+		p.file_name,
+		p.views,
+		p.create_time,
+		u.id as user_id,
+		u.username,
+		u.name,
+		u.gender,
+		u.birth_date,
+		u.email,
+		u.phone,
+		p.hash,
+		p.hash2,
+		p.hash3
+		from
+		post p
+		join users U
+		on
+		(p.user_id = u.id)
+		where
+		p.id =
+		#{id}
+	</select>
+
+	<!-- 게시글 수정 -->
+	<update id="updatePost">
+		update post
+		<set>
+			<if test="content != null">content = #{content},</if>
+			<if test="fileName != null">file_name = #{fileName},</if>
+			<if test="views > 0">views = #{views},</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<!-- 게시글 삭제 -->
+	<delete id="removePost">
+		delete from post where id = #{id}
+	</delete>
+
+	<!-- 개인 게시물 확인 -->
+	<select id="selectPostById" resultMap="postMap">
+		select
+		p.id,
+		p.content ,
+		p.views ,
+		p.create_time ,
+		p.file_name,
+		u.id as user_id,
+		u.username ,
+		u.name,
+		p.hash,
+		p.hash2,
+		p.hash3,
+		u.profile_name
+		from
+		post p join users U
+		on
+		(p.user_id = u.id)
+		where
+		u.id =
+		#{u.id}
+		order by create_time desc
+	</select>
+		<!-- 개인 게시물 확인 -->
+	<select id="selectPostListById" resultMap="postMap">
+		select
+		p.id,
+		p.content ,
+		p.views ,
+		p.create_time ,
+		p.file_name,
+		u.id as user_id,
+		u.username ,
+		u.name,
+		p.hash,
+		p.hash2,
+		p.hash3,
+		u.profile_name
+		from
+		post p join users U
+		on
+		(p.user_id = u.id)
+		where
+		u.id =
+		#{u.id}
+		order by create_time desc
+	</select>
+	<select id="findByContentContaining" resultMap="postMap"
+		parameterType="java.util.Map">
+		SELECT *
+		FROM post
+		WHERE (content LIKE '%' || #{keyword} || '%') AND user_id = #{userId}
+		ORDER BY create_time DESC
+	</select>
+
+
+	<select id="findByHashContaining" resultMap="postMap"
+		parameterType="java.util.Map">
+		SELECT *
+		FROM post
+		WHERE (hash LIKE '%' || #{keyword} ||
+		'%') AND user_id = #{userId}
+		order by create_time desc
+	</select>
+	
+	<!-- 개인 게시물 확인 -->
+	<select id="pagePostId" resultMap="postMap">
+		select
+		p.id,
+		p.content ,
+		p.views,
+		p.create_time ,
+		p.file_name,
+		u.id as user_id,
+		u.username ,
+		u.name,
+		p.hash,
+		p.hash2,
+		p.hash3,
+		u.profile_name
+		from
+		post p join users U
+		on
+		(p.user_id = u.id)
+		where
+		u.id =
+		#{id}
+		order by create_time desc
+	</select>
+	
+	<!-- 사용자 글 갯수 조회 -->
+	<select id="getUserTotal" resultType="int">
+		select count(*) from post
+		where
+		user_id =
+		#{id}
+	</select>
+	<select id="findUserContentTotalSearch" resultType="int">
+		SELECT
+		count(*)
+		FROM post
+		WHERE (content LIKE '%' || #{keyword} || '%') AND
+		user_id = #{userId}
+		order by create_time desc
+	</select>
+	<select id="findUserHashTotalSearch" resultType="int">
+		SELECT count(*)
+		FROM post
+		WHERE (hash LIKE '%' || #{keyword} || '%') AND user_id =
+		#{userId}
+		order by create_time desc
+	</select>
+</mapper>

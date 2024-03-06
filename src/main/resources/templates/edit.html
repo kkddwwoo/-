@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게시글 수정</title>
+<style>
+body {
+	margin: 0 auto;
+	margin-top: 60px;
+	font-family: 'YourFontName', sans-serif;
+}
+
+#content-section {
+	padding: 2em;
+}
+
+#edit-upload-form {
+	max-width: 60%;
+	margin: 0 auto;
+	margin-top: 50px;
+}
+
+#edit-upload-form label, #edit-upload-form textarea {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#edit-upload-form button {
+	margin-top: 10px;
+}
+
+#edit-upload-form {
+	position: relative;
+	border: 2px solid rgba(199, 200, 204, 0.5);
+}
+
+#textAreaContainer {
+	width: 100%;
+	background-color: white;
+}
+
+textarea {
+	border: none !important;
+	box-sizing: border-box;
+	padding: 5px 8px;
+	width: 100%;
+	height: 250px;
+	resize: none;
+	font-size: 15px;
+}
+
+textarea:focus {
+	outline: none;
+	border: 1px solid transparent;
+}
+
+#charCount {
+	position: absolute;
+	bottom: 0;
+	right: 3%;
+	bottom: 1%;
+	padding: 5px;
+	color: gray;
+}
+
+#button-area button {
+	border-radius: 10px;
+	background-color: #dddddd;
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	margin: 5px;
+}
+
+#button-area {
+	border-top: 2px solid rgba(199, 200, 204, 0.5);
+	display: grid;
+	place-items: center;
+}
+
+.title {
+	display: grid;
+	place-items: center;
+}
+
+.title h2 {
+	margin-left: 20px;
+	font-size: 35px;
+}
+
+@font-face {
+	font-family: 'YourFontName';
+	src: url("/fonts/main.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+</style>
+</head>
+<body>
+	<div>
+		<div th:replace="~{navi :: navi}"></div>
+		<div class="title">
+			<h2>文の修正</h2>
+		</div>
+
+		<section id="edit-upload-form">
+			<!-- 게시글 수정 폼 -->
+			<form th:action="@{/edit/{id}(id=${postEditForm.id})}" method="post"
+				th:object="${postEditForm}" enctype="multipart/form-data">
+
+				<div class="mb-3" id="textAreaContainer">
+
+					<textarea id="edit" class="form-control" th:field="*{content}"
+						rows="10" cols="50" required>[(*{content})]</textarea>
+
+
+					<div class="alert alert-danger" th:errors="*{content}"></div>
+
+					<div id="button-area">
+						<div id="charCount">0 / 1500</div>
+						<button type="submit">修整</button>
+					</div>
+				</div>
+			</form>
+	</div>
+	</section>
+
+	<script>
+		// 텍스트 영역 요소 가져오기
+		var edit = document.getElementById('edit');
+		// 글자 수를 표시할 요소 가져오기
+		var charCount = document.getElementById('charCount');
+
+		// 텍스트 영역에 입력할 때마다 호출되는 이벤트 핸들러
+		edit.addEventListener('input', function() {
+			// 텍스트 영역의 현재 글자 수 가져오기
+			var count = edit.value.length;
+			// 최대 글자 수를 1500으로 제한
+			if (count > 1500) {
+				edit.value = edit.value.substring(0, 1500);
+				count = 1500;
+			}
+			// 현재 글자 수를 표시
+			charCount.textContent = count + ' / 1500';
+		});
+	</script>
+
+</body>
+</html>

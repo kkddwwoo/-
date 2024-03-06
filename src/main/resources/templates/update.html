@@ -1,0 +1,172 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!DOCTYPE HTML>
+<!--
+    Signup Page by HTML5 UP
+    html5up.net | @ajlkn
+    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+
+<head>
+<title>Signup Page</title>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<style>
+/* 스타일 직접 적용 시작 */
+body {
+	background-color: #101010;
+	color: #aaa;
+	font-family: 'YourFontName', sans-serif;
+	font-weight: 400;
+	line-height: 1.65;
+	font-size: 1em;
+	overflow: hidden; /* 스크롤 없애기 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	line-height: 1.25;
+	margin: 0 0 0.5em 0;
+	color: #555;
+}
+
+p {
+	margin: 0 0 1.25em 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #00D3B7;
+}
+
+#main {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	background: #fff;
+	overflow-x: hidden;
+	overflow-y: auto;
+	text-align: center;
+	visibility: visible;
+	z-index: 10000;
+	left: 0;
+}
+
+#header {
+	padding: 3em 2.25em 1.75em 2.25em;
+}
+
+#header h1 {
+	font-size: 2.25em;
+	font-weight: 700;
+}
+
+#footer {
+	padding: 2.25em 2.25em 1em 2.25em;
+}
+
+#footer .copyright {
+	list-style: none;
+	padding: 0;
+}
+
+
+#update-form {
+	max-width: 300px; /* 폼의 최대 가로폭 설정 */
+	margin: 0 auto; /* 가운데 정렬 */
+}
+
+#update-form label, #update input {
+	margin: 5px;
+	width: 100%; /* 인풋박스 100% 폭 설정 */
+	height: 40px;
+	box-sizing: border-box;
+	width: 100%; /* 너비에 padding과 border를 포함하도록 설정 */
+}
+
+input {
+	border-radius: 10px; /* 모서리를 둥글게 만듭니다 */
+	border: solid 1px;
+	padding: 10px 20px;
+	cursor: pointer;
+}
+
+button {
+	border-radius: 10px; /* 모서리를 둥글게 만듭니다 */
+	padding: 10px 20px;
+	cursor: pointer;
+	background-color: #dddddd;
+	padding: 10px 20px;
+	border: none;
+}
+
+@font-face {
+	font-family: 'YourFontName';
+	src: url("/fonts/main.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+/* 스타일 직접 적용 종료 */
+</style>
+
+</head>
+
+<body class="is-preload-0 is-preload-1 is-preload-2">
+
+	<!-- Main -->
+	<div id="main">
+		<div th:replace="~{navi :: navi}"></div>
+
+		<!-- Header -->
+		<header id="header">
+			<div>
+				<br> <br>
+			</div>
+			<h1>
+				<a href="/update">UPDATE</a> / <a href="/mypage">PROFILE</a>
+			</h1>
+			<p>変更したい情報を選択してください</p>
+		</header>
+
+		<form method="post" id="update-form">
+			<div class="mb-3">
+				<label for="password" class="form-label">password</label> <input
+					type="text" id="password" class="form-control" required>
+			</div>
+			<br>
+			<div class="mb-3">
+				<label for="phone" class="form-label">phone</label> <input
+					type="text" id="phone" class="form-control" required>
+			</div>
+			<br>
+			<div class="mb-3">
+				<label for="email" class="form-label">email</label> <input
+					type="text" id="email" class="form-control" required>
+			</div>
+			<br>
+			<button type="submit" class="btn btn-primary">update</button>
+		</form>
+
+		<!-- Footer -->
+		<footer id="footer">
+			<ul class="copyright">
+				<li>&copy; Untitled.</li>
+				<li>Designed by 元picassoSNS</a></li>
+			</ul>
+		</footer>
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+</html>

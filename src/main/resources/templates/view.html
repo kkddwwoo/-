@@ -1,0 +1,188 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>User Content Page</title>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<link rel="stylesheet" href="assets/css/main2.css" />
+<!-- Bootstrap CSS 추가 -->
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<script>
+	function confirmRemove(postId) {
+		if (confirm('정말 삭제하시겠습니까?')) {
+			location.href = '/view/remove/' + postId;
+		}
+	}
+</script>
+<style>
+/* 스타일 직접 적용 시작 */
+body {
+	background-color: #101010;
+	color: #aaa;
+	font-family: 'YourFontName', sans-serif;
+	font-weight: 400;
+	line-height: 1.65;
+	font-size: 1em;
+	overflow: hidden; /* 스크롤 없애기 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	line-height: 1.25;
+	margin: 0 0 0.5em 0;
+	color: #555;
+}
+
+p {
+	margin: 0 0 1.25em 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #00D3B7;
+}
+
+#main {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	background: #F3F5F9;
+	overflow-x: hidden;
+	overflow-y: auto;
+	text-align: center;
+	visibility: visible;
+	z-index: 10000;
+	left: 0;
+}
+
+#header {
+	padding: 3em 2.25em 1.75em 2.25em;
+}
+
+#header h1 {
+	font-size: 2.25em;
+	font-weight: 700;
+}
+
+#footer {
+	padding: 2.25em 2.25em 1em 2.25em;
+}
+
+#footer .copyright {
+	list-style: none;
+	padding: 0;
+}
+
+#container {
+	display: flex;
+	align-items: center;
+	white-space: pre-wrap;
+	word-wrap: break-word;
+}
+
+#content {
+	max-width: 50%;
+	display: inline-block;
+	color: black;
+	text-align: justify;
+	flex: 1;
+	margin-left: 40px;
+	margin-right: 40px;
+}
+
+#container img {
+	display: inline-block;
+	border-radius: 20px;
+	border: 2px solid black;
+	max-height: 500px;
+	max-width: 50%;
+}
+
+@font-face {
+	font-family: 'YourFontName';
+	src: url("/fonts/main.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+/* 스타일 직접 적용 종료 */
+</style>
+</head>
+<body class="is-preload-0 is-preload-1 is-preload-2">
+
+	<!-- Main -->
+	<div id="main">
+		<div th:replace="~{navi :: navi}"></div>
+		<div>
+			<br> <br> <br>
+		</div>
+
+		<div class="container mx-auto my-5">
+
+			<!-- 게시글 상세 내용 -->
+			<div class="card" th:object="${post}">
+				<div class="card-header">
+					<!-- 게시글 시간 -->
+					<td th:text="${#temporals.format(post.createTime, 'yyyy-MM-dd')}"></td>
+				</div>
+
+				<div id="container" class="card-header">
+					<img th:src="@{'/display?filename='+${post.fileName}}"
+						th:alt="${post.fileName}">
+					<div id="content">
+						<!-- 게시글 내용 -->
+						<p th:text="*{content}">내용</p>
+					</div>
+				</div>
+
+				<!-- 해쉬부분 -->
+				<div class="card-header"
+					style="color: #4e41db; font-size: 18px; font-weight: bold;">
+					<span th:if="${post.hash != null}">#<span
+						th:text="${post.hash}">태그</span>
+					</span> <span th:if="${post.hash2 != null}">#<span
+						th:text="${post.hash2}">태그</span>
+					</span> <span th:if="${post.hash3 != null}">#<span
+						th:text="${post.hash3}">태그</span>
+					</span>
+				</div>
+
+				<div class="card-header">
+					<!-- 수정 삭제 -->
+					<th:block sec:authorize="isAuthenticated()">
+						<!-- 게시글 수정하기 버튼 -->
+						<a th:href="@{/edit/{id}(id=${post.id})}" class="btn btn-primary">修整</a>
+
+						<!-- 게시글 삭제 버튼 -->
+						<button type="button" class="btn btn-danger "
+							th:onclick="|confirmRemove(${post.id})|">削除</button>
+					</th:block>
+
+					<!-- 뒤로 가기 버튼 -->
+					<a href="/list" class="btn btn-secondary">目録</a>
+				</div>
+
+
+			</div>
+
+		</div>
+
+
+	</div>
+
+
+
+	<!-- Bootstrap JS 및 의존성 스크립트 추가 -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

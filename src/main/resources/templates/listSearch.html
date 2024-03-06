@@ -1,0 +1,350 @@
+User
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>User Content Page</title>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+<noscript>
+	<link rel="stylesheet" href="assets/css/noscript.css" />
+</noscript>
+
+<style>
+/* 스타일 직접 적용 시작 */
+body {
+	background-color: #101010;
+	font-family: 'YourFontName', sans-serif;
+	color: #aaa;
+	font-weight: 400;
+	line-height: 1.65;
+	font-size: 1em;
+	overflow: hidden; /* 스크롤 없애기 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-weight: 400;
+	line-height: 1.25;
+	margin: 0 0 0.5em 0;
+	color: #555;
+}
+
+p {
+	margin: 0 0 1.25em 0;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #00D3B7;
+}
+
+#main {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100vh;
+	background: #fff;
+	overflow-x: hidden;
+	overflow-y: auto;
+	text-align: center;
+	visibility: visible;
+	z-index: 10000;
+	left: 0;
+}
+
+#header {
+	padding: 3em 2.25em 1.75em 2.25em;
+}
+
+#footer {
+	padding: 2.25em 2.25em 1em 2.25em;
+}
+
+#footer .copyright {
+	list-style: none;
+	padding: 0;
+}
+
+#navigator {
+	background: #fff;
+	text-align: center;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	z-index: 10000;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+#navigator ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	display: flex;
+}
+
+#navigator li {
+	flex-grow: 1;
+}
+
+#navigator a {
+	display: block;
+	padding: 1em;
+	text-decoration: none;
+	color: #333;
+	font-weight: bold;
+}
+
+#navigator a:hover {
+	background: #eee;
+}
+/* 스타일 직접 적용 종료 */
+/* Additional Style */
+#content-section {
+	padding: 2em;
+}
+
+#writing-upload-form {
+	max-width: 500px; /* Adjusted max-width to make it wider */
+	margin: 0 auto;
+}
+
+#writing-upload-form label, #writing-upload-form textarea {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+#writing-upload-form button {
+	margin-top: 10px;
+}
+
+#imglist {
+	display: inline-block;
+	position: relative;
+	margin-right: 10px; /* 각 이미지 사이의 간격을 조정합니다. */
+	margin-bottom: 10px;
+}
+
+#imglist img {
+	border: 1px solid gray;
+	width: 350px; /* 각 이미지의 너비를 계산하여 설정합니다. 여기서는 간격도 고려합니다. */
+	display: inline-block; /* 이미지를 인라인 블록 요소로 설정합니다. */
+	vertical-align: top; /* 이미지의 정렬을 상단으로 설정합니다. */
+	box-sizing: border-box;
+}
+
+#imglist .text-overlay {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 10px;
+	color: black; /* 텍스트 색상 */
+	font-weight: bold;
+	font-size: 25px;
+}
+
+#searchType {
+	border-radius: 10px;
+	border: solid 1px;
+	margin-right: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+#keyword {
+	border-radius: 10px;
+	border: solid 1px;
+	margin-right: 10px;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+button {
+	border-radius: 10px; /* 모서리를 둥글게 만듭니다 */
+	cursor: pointer;
+	border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+#blank {
+	margin-top: 30px;
+}
+
+@font-face {
+	font-family: 'YourFontName';
+	src: url("/fonts/main.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'YourNumberName';
+	src: url("/fonts/numberFont.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+</style>
+
+<script>
+	$(function() {
+		$('#searchForm')
+				.submit(
+						function(event) {
+							event.preventDefault(); // 기본 폼 제출 동작 방지
+							var searchType = $('#searchType').val(); // 검색 유형 가져오기
+							var keyword = $('#keyword').val(); // 키워드 가져오기
+
+							// AJAX 요청 생성
+							$
+									.ajax({
+										type : 'GET',
+										url : '/search',
+										data : {
+											searchType : searchType,
+											keyword : keyword
+										},
+										success : function(data) {
+											// 검색 결과를 받아왔을 때 실행되는 함수
+
+											// 이미지 목록을 담는 변수
+											var imgArea = $('#img-area');
+
+											// 이미지 목록을 초기화
+											imgArea.empty();
+
+											// 검색 결과를 순회하면서 이미지와 생성 시간을 포함한 HTML 요소를 생성하여 목록에 추가
+											data
+													.forEach(function(post) {
+														// 이미지와 생성 시간을 포함한 HTML 요소 생성
+														var html = '<div class="img-item">'
+																+ '<a href="/view/' + post.id + '" id="imglist">'
+																+ '<img src="/display?filename='
+																+ post.fileName
+																+ '" alt="'
+																+ post.fileName
+																+ '">'
+																+ '<div class="text-overlay">'
+																+ post.createTime
+																+ '</div>'
+																+ '</a>'
+																+ '</div>';
+
+														// 생성한 HTML 요소를 이미지 목록에 추가
+														imgArea.append(html);
+													});
+										},
+										error : function(xhr, status, error) {
+											// AJAX 요청이 실패했을 때 실행되는 함수
+											console.error('Error:', error);
+										}
+									});
+						});
+	});
+</script>
+</head>
+<body class="is-preload-0 is-preload-1 is-preload-2">
+
+	<!-- Main -->
+	<div id="main">
+		<!-- Navigator -->
+		<!-- Navigator -->
+		<div th:replace="~{navi :: navi}"></div>
+
+		<div class="container my-5">
+			<br></br>
+			<h1>私の日記</h1>
+			<div id="blank"></div>
+			<div class="search_box">
+				<form id="searchForm" action="/search" method="get">
+					<div class="sch_group fl">
+						<select id="searchType" name="searchType" title="검색 유형 선택"
+							style="width: 100px; height: 30px;">
+							<option value="">----</option>
+							<option value="content">content</option>
+							<option value="hash">tag</option>
+						</select> <input type="text" id="keyword" name="keyword"
+							placeholder="placeholder" title="키워드 입력" />
+						<button type="submit">
+							<i class="fas fa-search"></i><span class="skip_info">search</span>
+						</button>
+					</div>
+				</form>
+			</div>
+
+			<div id="img-area">
+				<tbody>
+					<tr th:each="post : ${userposts}">
+						<td><a th:href="@{/view/{id}(id=${post.id})}" id="imglist">
+								<img th:src="@{'/display?filename='+${post.fileName}}"
+								th:alt="${post.fileName}">
+								<div class="text-overlay"
+									style="font-family: 'YourNumberName', sans-serif;"
+									th:text="${#temporals.format(post.createTime, 'yy-MM-dd')}"></div>
+						</a></td>
+					</tr>
+				</tbody>
+			</div>
+		</div>
+		<div>
+			<!-- 페이징 컨트롤 -->
+			<nav aria-label="Page navigation example">
+				<ul class="pagination justify-content-center">
+					<!-- 이전 그룹이 없을 경우 보여주지 않음 -->
+					<th:block th:if="${navi.currentPage - navi.pagePerGroup > 0}">
+						<li class="page-item"><a class="page-link"
+							th:href="@{/search(page=${navi.currentPage - navi.pagePerGroup}, searchType=${param.searchType}, keyword=${param.keyword})}">Last
+								Group</a></li>
+					</th:block>
+					<!-- 이전 페이지가 없을 경우 보여주지 않음 -->
+					<th:block th:if="${navi.currentPage - 1 > 0}">
+						<li class="page-item"><a class="page-link"
+							th:href="@{/search(page=${navi.currentPage - 1}, searchType=${param.searchType}, keyword=${param.keyword})}">Last</a></li>
+					</th:block>
+
+					<!-- 페이지 번호 -->
+					<th:block th:if="${navi.endPageGroup ne 0}">
+						<li
+							th:each="counter : ${#numbers.sequence(navi.startPageGroup, navi.endPageGroup)}"
+							th:class="${counter == navi.currentPage} ? 'page-item active' : 'page-item'">
+							<a class="page-link"
+							th:href="@{/search(page=${counter}, searchType=${param.searchType}, keyword=${param.keyword})}"
+							th:text="${counter}"></a>
+						</li>
+					</th:block>
+
+
+					<!-- 다음 페이지가 없을 경우 보여주지 않음 -->
+					<th:block th:if="${navi.currentPage < navi.totalPageCount}">
+						<li class="page-item"><a class="page-link"
+							th:href="@{/search(page=${navi.currentPage + 1}, searchType=${param.searchType}, keyword=${param.keyword})}">Next</a></li>
+					</th:block>
+
+
+					<!-- 다음 그룹이 없을 경우 보여주지 않음 -->
+					<th:block
+						th:if="${navi.currentPage + navi.pagePerGroup < navi.totalPageCount}">
+						<li class="page-item"><a class="page-link"
+							th:href="@{/search(page=${navi.currentPage + navi.pagePerGroup}, searchType=${param.searchType}, keyword=${param.keyword})}">Next
+								Group</a></li>
+					</th:block>
+				</ul>
+			</nav>
+		</div>
+	</div>
+	<!-- Footer -->
+	<footer id="footer">
+		<ul class="copyright">
+			<li>&copy; Untitled.</li>
+			<li>Designed by 元picassoSNS</a></li>
+		</ul>
+	</footer>
+
+
+	<!-- Bootstrap JS 및 의존성 스크립트 추가 -->
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

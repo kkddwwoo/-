@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.picasso.repository.UserMapper">
+	<!-- 회원정보 등록 -->
+	<insert id="saveUser">
+		<selectKey keyProperty="id" resultType="long" order="BEFORE">
+			select
+			seq_user.nextval from dual
+		</selectKey>
+		insert into users (
+		id,
+		username,
+		password,
+		name,
+		gender,
+		birth_date,
+		email,
+		phone
+		) values (
+		#{id},
+		#{username},
+		#{password},
+		#{name},
+		#{gender},
+		#{birthDate},
+		#{email},
+		#{phone}
+		)
+	</insert>
+
+	<!-- username 으로 회원정보 검색 -->
+	<select id="findUserByUsername" resultType="user">
+		select
+		id,
+		username,
+		password,
+		name,
+		gender,
+		birth_date as birthDate,
+		email,
+		phone,
+		profile_name
+		from
+		users
+		where
+		username = #{username}
+	</select>
+
+	<update id="updateUser">
+		update
+		users
+		<set>
+			<if test="name != null">name = #{name},</if>
+			<if test="profileName != null">profile_name = #{profileName}</if>
+		</set>
+		where
+		id = #{id}
+	</update>
+
+	<!-- id 로 회원정보 검색 -->
+	<select id="findUserById" resultType="user">
+		select
+		id,
+		username,
+		password,
+		name,
+		gender,
+		birth_date as birthDate,
+		email,
+		profile_name as profileName
+		from
+		users
+		where
+		id = #{id}
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+

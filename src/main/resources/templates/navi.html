@@ -1,0 +1,69 @@
+<nav th:fragment="navi" id="navigator">
+	<style>
+		#navigator {
+			background: #fff;
+			text-align: center;
+			position: fixed;
+			width: 100%;
+			top: 0;
+			z-index: 10000;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+		
+		#navigator ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: flex;
+		}
+		
+		#navigator li {
+			flex-grow: 1;
+		}
+		
+		#navigator a {
+			display: block;
+			padding: 1em;
+			text-decoration: none;
+			color: #333;
+			font-weight: bold;
+		}
+		
+		#navigator a:hover {
+			background: #eee;
+		}
+		
+		#Dropdown > ul {
+    		display: none;
+   			top: 100%; /* 부모 요소 아래에 위치하도록 설정합니다. */
+    		left: 0; /* 왼쪽 정렬합니다. */
+    		z-index: 1; /* 다른 요소들보다 위에 표시합니다. */
+		}
+
+		#Dropdown:hover > ul {
+    		display: block; 
+		}
+		
+		
+	</style>
+
+    <div id="navbarNav">
+      <ul>
+      	<li><a href="/">Main</a></li>
+        <li><a href="/list">List</a></li>
+        <li><a class="nav-link" href="/imageGenerate">Write</a></li>
+        <li id="Dropdown" sec:authorize="!isAuthenticated()">
+          <a href="/loginform">Login</a>
+          <ul>
+            <li><a href="/register">Join</a></li>
+          </ul>
+        </li>
+        <li id="Dropdown" sec:authorize="isAuthenticated()">
+          <a href="/mypage">Mypage</a>
+          <ul>
+            <li><a href="/logout">Logout</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+</nav>

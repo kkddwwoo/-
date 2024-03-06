@@ -1,0 +1,252 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<title>User Content Page</title>
+<meta charset="utf-8" />
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, user-scalable=no" />
+<style>
+/* 스타일 직접 적용 시작 */
+	body {
+		background-color: #101010;
+		color: #aaa;
+		font-family: 'YourFontName', sans-serif;
+		font-weight: 400;
+		line-height: 1.65;
+		font-size: 1em;
+		overflow: hidden; /* 스크롤 없애기 */
+	}
+	
+	h1, h2, h3, h4, h5, h6 {
+		font-weight: 400;
+		line-height: 1.25;
+		margin: 0 0 0.5em 0;
+		color: #555;
+	}
+	
+	p {
+		margin: 0 0 1.25em 0;
+	}
+	
+	a {
+		color: inherit;
+		text-decoration: none;
+	}
+	
+	a:hover {
+		color: #00D3B7;
+	}
+	
+	#main {
+		position: fixed;
+		top: 0;
+		width: 100%;
+		height: 100vh;
+		background: #F3F5F9;
+		overflow-x: hidden;
+		overflow-y: auto;
+		text-align: center;
+		visibility: visible;
+		z-index: 10000;
+		left: 0;
+	}
+	
+	#header {
+		padding: 3em 2.25em 1.75em 2.25em;
+	}
+	
+	#header h1 {
+		font-size: 2.25em;
+		font-weight: 700;
+	}
+	
+	footer {
+		border-top: 1px solid #ccc;
+		padding: 0;
+		text-align: center;
+		margin: 50px;
+		bottom: 0;
+		
+	
+	}
+	
+	footer ul {
+		list-style: none;
+		padding: 0px ;
+	}
+	
+	/* Additional Style */
+	#content-section {
+		padding: 2em;
+	}
+	
+	#writing-upload-form {
+		max-width: 600px; /* Adjusted max-width to make it wider */
+		margin: 0 auto;
+	}
+	
+	#writing-upload-form label, #writing-upload-form textarea {
+		width: 100%;
+		box-sizing: border-box;
+	}
+	
+	#writing-upload-form button {
+		margin-top: 10px;
+	}
+	
+	
+	#writing-upload-form {
+		position: relative;
+		border: 2px solid rgba(199, 200, 204, 0.5);
+	}
+	
+ 	#textAreaContainer { 
+ 		width: 100%; 
+ 		background-color: white;
+         } 
+	
+	textarea {
+		border: none;
+		outline: none;
+		box-sizing: border-box;
+		padding: 5px 8px;
+		width: 100%;
+        height: 250px;
+        resize: none;
+        font-size: 15px;
+	}
+	
+	#writing-upload-form .placeholder-label {
+	    position: absolute;
+	    top: 12px;
+	    left: 12px;
+	    color: #999;
+	    pointer-events: none; /* 사용자 상호 작용 비활성화 */
+	    font-size: 16px; /* 텍스트 크기 조정 */
+		transition: opacity 0.3s; 
+		
+	}
+		
+	#charCount {
+ 		position: absolute; 
+		bottom: 0;
+		right: 3%;
+		bottom: 1%;
+		padding: 5px;
+		color: gray;
+		
+     }
+	
+	button {
+		border-radius: 10px; /* 모서리를 둥글게 만듭니다 */
+		background-color: #dddddd; /* 약간 회색을 띄게 설정합니다 */
+		border: none; /* 테두리를 제거합니다 */
+		padding: 10px 20px;
+		cursor: pointer;
+		margin: 5px ;
+	}
+	
+	#button-area {
+		border-top: 2px solid rgba(199, 200, 204, 0.5);
+	}
+	
+	@font-face {
+	font-family: 'YourFontName';
+	src: url("/fonts/main.ttf") format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+	
+</style>
+</head>
+<body class="is-preload-0 is-preload-1 is-preload-2">
+
+	<!-- Main -->
+	<div id="main">
+		<div th:replace="~{navi :: navi}"></div>
+		<header id="header">
+			<div>
+				<br> <br>
+			</div>
+			<h1 style="color: #4e41db; font-size: 40px; font-weight: bold;">作成</h1>
+			<p style="font-weight: bold; font-size: 13px;">あなたが書いた日記はあなたについて思ったより多くのことを教えてくれます</p>
+		</header>
+
+
+
+		<!-- Content Section -->
+		<img src="/images/kau.png" alt="Word Cloud Image"
+			style="width: 7%;">
+		<div>
+			<br>
+		</div>
+
+
+
+		<!-- Writing Upload Form -->
+		<section id="writing-upload-form">
+			<form action="/imageGenerate" method="post">
+				<div id="textAreaContainer">
+					<textarea id="writing" name="writing" rows="10" cols="50" required></textarea>
+					<label for="writing" class="placeholder-label">ここに文を書くと抽象画が出ます。</label>
+						<div id="button-area">
+							<div id="charCount">0 / 1500</div>
+							<button type="submit">作成</button>
+						</div>
+				</div>			
+			</form>
+		</section>
+		
+		<script>
+        // 텍스트 영역 요소 가져오기
+        var writing = document.getElementById('writing');
+        // 글자 수를 표시할 요소 가져오기
+        var charCount = document.getElementById('charCount');
+
+        // 텍스트 영역에 입력할 때마다 호출되는 이벤트 핸들러
+        writing.addEventListener('input', function() {
+            // 텍스트 영역의 현재 글자 수 가져오기
+            var count = writing.value.length;
+            // 최대 글자 수를 4000으로 제한
+            if (count > 1500) {
+                writing.value = writing.value.substring(0, 1500);
+                count = 1500;
+            }
+            // 현재 글자 수를 표시
+            charCount.textContent = count + ' / 1500';
+        });
+        
+        
+        var placeholderLabel = document.querySelector('.placeholder-label');
+
+        // 입력 이벤트를 감지하여 안내 문구 표시 여부를 결정합니다. 안내문구 예쁘게 보이기 위한 곳
+        writing.addEventListener('input', function () {
+            if (writing.value.trim() !== '') {
+                placeholderLabel.style.opacity = '0'; // 입력이 있을 때 안내 문구 투명하게 설정
+            } else {
+                placeholderLabel.style.opacity = '1'; // 입력이 없을 때 안내 문구 보이게 설정
+            }
+        });
+        
+    </script>
+		
+
+
+		<!-- Footer -->
+		<footer id="footer">
+			<ul class="copyright">
+				<li>&copy; Untitled.</li>
+				<li>Designed by 元picassoSNS</a></li>
+			</ul>
+		</footer>
+
+	</div>
+
+	<!-- Scripts -->
+	<script src="assets/js/jquery.min.js"></script>
+	<script src="assets/js/browser.min.js"></script>
+	<script src="assets/js/breakpoints.min.js"></script>
+	<script src="assets/js/main.js"></script>
+
+</body>
+</html>
